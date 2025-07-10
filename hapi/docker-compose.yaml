@@ -1,18 +1,21 @@
-version: '3.7'
-
 services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "8099:8080"
 
   fhir:
-    container_name: fhir
+    container_name: fhirV4
     image: "hapiproject/hapi:latest"
-    ports:
-      - "8099:8080"
+    network_mode: service:nginx
     configs:
       - source: hapi
         target: /app/config/application.yaml
     depends_on:
       - db
-
+      - nginx
 
   db:
     image: postgres
